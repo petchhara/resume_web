@@ -31,11 +31,20 @@
 <script setup>
 import { RouterView, RouterLink } from 'vue-router';
 import { useRouter } from 'vue-router';
+import { app, auth, database, ref as refDb, set, push } from './firebaseConfig'
+import { onMounted } from 'vue';
 const router = useRouter();
 const menuList = [
   { path:"/", name: "Home"},
-  { path:"/create", name: "Create"}
+  { path:"/create", name: "Create"},
+  { path:"chat", name: "Chat"}
 ]
+
+onMounted(() => {
+  // push(refDb(database,'all_chats'), {
+  //   test: "Hello World"
+  // })
+})
 
 </script>
 
