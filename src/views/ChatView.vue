@@ -21,7 +21,7 @@ onValue(db, (snapshot) => {
 })
 
 const onSend = () => {
-    if (chat.value != '') {
+    if (chat.value != '' && historyKey.value != '') {
         push(refDb(database, `all_chat/${historyKey.value}`), {
             "user": studentId,
             "message": chat.value,
