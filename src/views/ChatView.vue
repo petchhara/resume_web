@@ -11,20 +11,18 @@ import {
 } from '../firebaseConfig'
 let chat = ref("");
 let histories = ref([]);
-let groups = ref([]);
-let groupKey = ref("");
+let historyKey = ref(""); // collect select group
 const bottomEl = ref(null);
 const studentId = "รหัสนักศึกษา";
-const db = refDb(database, 'all_chat/group_1/');
-const dbGroup = refDb(database, 'all_chat/');
+const db = refDb(database, 'all_chat/');
 
-onValue(dbGroup, (snapshot) => {
-    groups.value = snapshot.val();
+onValue(db, (snapshot) => {
+    histories.value = snapshot.val();
 })
 
 const onSend = () => {
     if (chat.value != '') {
-        push(refDb(database, `all_chat/${groupKey.value}`), {
+        push(refDb(database, `all_chat/${historyKey.value}`), {
             "user": studentId,
             "message": chat.value,
             "dateTime": new Date().toISOString()
@@ -32,15 +30,11 @@ const onSend = () => {
         chat.value = "";
     }
 }
-onValue(db, (snapshot) => {
-    const data = snapshot.val();
-    histories.value = data;
-})
 onUpdated(() => {
     bottomEl.value.scrollIntoView({ behavior: 'smooth' });
 })
 const selectGroup = (key) => {
-    groupKey.value = key;
+    historyKey.value = key;
 }
 </script>
 
@@ -50,7 +44,7 @@ const selectGroup = (key) => {
             <div 
                 class="card card-side bg-base-100 shadow-xl w-full mb-4" 
                 style="cursor: pointer;"
-                v-for="(group, index) in groups" 
+                v-for="(group, index) in histories" 
                 :key="index" data-theme="cupcake"
                 @click="selectGroup(index)">
                 <div class="card-body">
@@ -61,13 +55,15 @@ const selectGroup = (key) => {
         </div>
         <div class="bg-transparent h-[90vh] w-[70%]">
             <div class="overflow-y-scroll h-[90%] p-5 card" data-theme="cupcake">
-                <div v-for="(history, index) in groups[groupKey]"
-                    :class="`chat ${history.user == studentId ? 'chat-end' : 'chat-start'}`" :key="index">
+                <div v-for="(history, index) in histories[historyKey]"
+                    :class="`chat ${history.user == studentId ? 'chat-end' : 'chat-start'}`" 
+                    :key="index"
+                    >
                     <div class="chat-header">
                         {{ history.user }}
                         <time class="text-xs opacity-50"> {{ history.dateTime }}</time>
                     </div>
-                    <div class="chat-bubble" v-if="history.message != ''">{{ history.message }}</div>
+                    <div class="chat-bubble" style="word-break: break-word;">{{ history.message }}</div>
                 </div>
                 <div ref="bottomEl"></div>
             </div>
