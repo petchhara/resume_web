@@ -6,7 +6,7 @@
           <table class="table text-lg">
             <thead class="text-xl">
               <tr>
-                <th>#test</th>
+                <th>#</th>
                 <th>Name</th>
                 <th>Price</th>
                 <th></th>
